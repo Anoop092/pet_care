@@ -1,8 +1,16 @@
 import Head from "next/head";
 import Link from "next/link";
 import React from "react";
+import { useGlobalContext } from "../utils/Store";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Layout = ({ children, title }) => {
+  const { state, dispatch } = useGlobalContext();
+  const { cart } = state;
+
+  let count = cart.cartItems.reduce((sum, cur) => sum + cur.quantity, 0);
+
   return (
     <>
       <Head>
@@ -10,12 +18,25 @@ const Layout = ({ children, title }) => {
         <meta name="description" content="the pet-zone for pet lovers" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <ToastContainer position="bottom-center" limit={1} />
       <div className="flex flex-col min-h-screen justify-between">
         <header>
-          <nav className=" flex h-12 shadow-md py-5 px-3 bg-blue-500 items-center ">
+          <nav className=" flex h-12 shadow-md py-5 px-3 bg-blue-500 items-center justify-between">
             <Link href="/">
               <a className="text-xl text-white font-bold">PET ZONE</a>
             </Link>
+            <div>
+              <Link href="/cart">
+                <a className="text-xl p-2 text-white">
+                  Cart
+                  {cart.cartItems.length > 0 && (
+                    <span className="ml-1 rounded-full bg-red-600 px-2 py-1 text-xs font-bold text-white">
+                      {count}
+                    </span>
+                  )}
+                </a>
+              </Link>
+            </div>
           </nav>
         </header>
         <main className="container m-auto mt-4 px-4">{children}</main>

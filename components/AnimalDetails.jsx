@@ -1,6 +1,7 @@
 import React from "react";
 import { urlFor } from "../utils/image";
 import Image from "next/image";
+import { useGlobalContext } from "../utils/Store";
 const AnimalDetails = ({ animal }) => {
   const {
     name,
@@ -12,6 +13,7 @@ const AnimalDetails = ({ animal }) => {
     sex,
     image,
   } = animal;
+  const { addToCartHandler } = useGlobalContext();
   return (
     <div className="grid grid-cols-1 md:grid-cols-4 md: gap-3">
       <div className="md:col-span-2">
@@ -54,7 +56,12 @@ const AnimalDetails = ({ animal }) => {
             <div>Status</div>
             <div>{countInStock > 0 ? "In Stock" : "Unavailable"}</div>
           </div>
-          <button className="primary-button">Add to Cart</button>
+          <button
+            className="primary-button"
+            onClick={() => addToCartHandler(animal)}
+          >
+            Add to Cart
+          </button>
         </div>
       </div>
     </div>
