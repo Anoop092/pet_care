@@ -7,7 +7,7 @@ const AnimalsList = ({ animal }) => {
 
   return (
     <div className="card">
-      <Link href={`/animals/${slug}`}>
+      <Link href={`/animals/${slug.current}`}>
         <a>
           <img
             src={urlForThumbnail(image)}
@@ -17,7 +17,7 @@ const AnimalsList = ({ animal }) => {
         </a>
       </Link>
       <div className="flex flex-col justify-center items-center">
-        <Link href={`animals/${slug}`}>
+        <Link href={`animals/${slug.current}`}>
           <a className="text-lg">{name.toUpperCase()}</a>
         </Link>
         <p className="text-gray-700 text-xl py-2">
