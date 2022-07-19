@@ -1,7 +1,12 @@
 import Link from "next/link";
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Layout } from "../../components";
+import { toast } from "react-toastify";
+import axios from "axios";
+import jsCookie from "js-cookie";
+import { useRouter } from "next/router";
+import { useGlobalContext } from "../../utils/Store";
 
 const RegisterScreen = () => {
   const {
@@ -10,9 +15,42 @@ const RegisterScreen = () => {
     getValues,
     formState: { errors },
   } = useForm();
+  const { state, dispatch } = useGlobalContext();
+  const { userInfo } = state;
+  const router = useRouter();
+  useEffect(() => {
+    if (userInfo) {
+      router.push("/");
+    }
+  }, [router, userInfo]);
+  const submitHandler = async ({ name, email, password, confirmPassword }) => {
+    if (password !== confirmPassword) {
+      toast.error(
+        "please check password and confirm password which are not same"
+      );
+      return;
+    }
+    try {
+      const { data } = await axios.post("/api/users/register", {
+        name,
+        email,
+        password,
+      });
+      dispatch({ type: "USER_LOGIN", payload: data });
+      console.log(data);
+      jsCookie.set("userInfo", JSON.stringify(data));
+      router.push("/");
+    } catch (error) {
+      toast.error(error.message);
+      return;
+    }
+  };
   return (
     <Layout title="Create Account">
-      <form className="mx-auto max-w-screen-md">
+      <form
+        className="mx-auto max-w-screen-md"
+        onSubmit={handleSubmit(submitHandler)}
+      >
         <h1 className="mb-4 text-xl">Create Account</h1>
         <div className="mb-4">
           <label htmlFor="name">Name</label>

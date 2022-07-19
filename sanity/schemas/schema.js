@@ -6,6 +6,7 @@ import schemaTypes from "all:part:@sanity/base/schema-type";
 
 // Then we give our schema to the builder and provide the result to Sanity
 import animals from "./animals";
+import users from "./users";
 export default createSchema({
   // We name our schema
   name: "default",
@@ -14,5 +15,6 @@ export default createSchema({
   types: schemaTypes.concat([
     /* Your types here! */
     animals,
+    users,
   ]),
 });

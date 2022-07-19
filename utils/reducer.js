@@ -23,6 +23,9 @@ export default function reducer(state, action) {
       Cookies.set("cart", JSON.stringify({ ...state.cart, cartItems }));
       return { ...state, cart: { ...state.cart, cartItems } };
     }
+    case "USER_LOGIN": {
+      return { ...state, userInfo: action.payload };
+    }
 
     default:
       return state;

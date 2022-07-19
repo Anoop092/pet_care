@@ -9,6 +9,8 @@ const Layout = ({ children, title }) => {
   const { state, dispatch } = useGlobalContext();
   const [count, setCount] = useState(0);
   const { cart } = state;
+  const { userInfo } = state;
+  console.log(userInfo);
   useEffect(() => {
     let num = cart.cartItems.reduce((sum, cur) => sum + cur.quantity, 0);
     setCount(num);
@@ -39,6 +41,15 @@ const Layout = ({ children, title }) => {
                   )}
                 </a>
               </Link>
+              {userInfo ? (
+                <Link href="/profile">
+                  <a className="text-xl p-2">{userInfo.name}</a>
+                </Link>
+              ) : (
+                <Link href="/login">
+                  <a className="text-xl p-2">Login</a>
+                </Link>
+              )}
             </div>
           </nav>
         </header>
