@@ -14,6 +14,9 @@ const initialState = {
         shippingAddress: {},
         payment: "",
       },
+  userInfo: Cookies.get("userInfo")
+    ? JSON.parse(Cookies.get("userInfo"))
+    : null,
 };
 
 export function StoreProvider({ children }) {
