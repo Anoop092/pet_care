@@ -15,6 +15,14 @@ export default function reducer(state, action) {
 
       return { ...state, cart: { ...state.cart, cartItems } };
     }
+    case "DELETE_CART_ITEM": {
+      const deleteItem = action.payload;
+      const cartItems = state.cart.cartItems.filter(
+        (item) => item._id !== deleteItem._id
+      );
+      Cookies.set("cart", JSON.stringify({ ...state.cart, cartItems }));
+      return { ...state, cart: { ...state.cart, cartItems } };
+    }
 
     default:
       return state;

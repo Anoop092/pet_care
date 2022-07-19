@@ -3,6 +3,7 @@ import Cookies from "js-cookie";
 import reducer from "./reducer";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useRouter } from "next/router";
 
 const Store = React.createContext();
 const initialState = {
@@ -17,6 +18,8 @@ const initialState = {
 
 export function StoreProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const router = useRouter();
+
   const addToCartHandler = async (animal) => {
     const existingItem = state.cart.cartItems.find((x) => x._id === animal._id);
     const quantity = existingItem ? existingItem.quantity + 1 : 1;
@@ -27,9 +30,33 @@ export function StoreProvider({ children }) {
     }
     dispatch({ type: "ADD_TO_CART", payload: { ...animal, quantity } });
     toast.success("successfully added to cart");
+    router.push("/cart");
+  };
+  const updateCartHandler = async (item, qty) => {
+    const quantity = Number(qty);
+
+    const { data } = await axios.get(`/api/animals/${item._id}`);
+
+    if (data.countInStock < quantity) {
+      return toast.error("Sorry.Product is out of stock");
+    }
+    dispatch({ type: "ADD_TO_CART", payload: { ...item, quantity } });
+    toast.success("Updated the cart");
+  };
+  const removeCartHandler = async (item) => {
+    dispatch({ type: "DELETE_CART_ITEM", payload: item });
+    toast.success("Successfully deleted cart item");
   };
   return (
-    <Store.Provider value={{ state, dispatch, addToCartHandler }}>
+    <Store.Provider
+      value={{
+        state,
+        dispatch,
+        addToCartHandler,
+        updateCartHandler,
+        removeCartHandler,
+      }}
+    >
       {children}
     </Store.Provider>
   );
